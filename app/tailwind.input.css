@@ -1,0 +1,528 @@
+/* Blue Quince styles: Tailwind CSS v4 plus this template's customizations.
+   Components use Tailwind utility classes; this file holds what utilities can't:
+   1. colour tokens for light/dark   2. the Tailwind theme built from them
+   3. base element styles           4. shared building blocks (.button, .text-link, .kicker, ...)
+   5. illustrations and animation   6. stateful pieces styled by data attributes */
+@import 'tailwindcss';
+
+/* `dark:` follows the jamstacks theme toggle (html.dark). Prefer colour tokens instead. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------
+   1. Colour tokens. Change the palette here.
+   Light mode is "Courtyard at noon" (whitewash and Aegean cobalt); dark mode is
+   "After the last sun" (an indigo courtyard). Every colour that changes with the theme is a
+   variable, so components use utilities like `bg-surface text-ink` and rarely need `dark:`.
+   Keep the two dark blocks below identical.
+   ------------------------------------------------------------------ */
+:root {
+  --bg: #f8f7f0;
+  --surface: #ffffff;
+  --surface-alt: #eaf0ed;
+  --text: #173447;
+  --muted: #50616b;
+  --accent: #164d91;
+  --accent-strong: #0f3a70;
+  --accent-text: #ffffff;
+  --link: #164d91;
+  --olive: #53623c;
+  --lemon: #e9c64e; /* illustration only: never small text */
+  --rule: #cbd6db;
+  --focus: #164d91;
+  --danger: #a3322a;
+  --success: #3f6a2c;
+  --open: #3f7a3a;
+  --plaster-line: rgba(23, 52, 71, .035);
+  --plaster-wash: rgba(255, 255, 255, .55);
+
+  /* Shared table and plates */
+  --table-top: #fdfcf7;
+  --table-edge: #164d91;
+  --table-shadow: rgba(23, 52, 71, .1);
+  --runner: #eaf0ed;
+  --runner-line: #9fb4c9;
+  --plate: #ffffff;
+  --plate-rim: #164d91;
+  --plate-shadow: rgba(23, 52, 71, .14);
+  --bowl: #2a62a8;
+  --napkin: #dfe8ef;
+  --glass-fill: rgba(197, 222, 240, .55);
+  --glass-rim: #9fb7c8;
+
+  /* Food tokens for the drawings (MenuItem.color picks one). */
+  --food-olive: #7d8f4e;
+  --food-lemon: #edc84a;
+  --food-tomato: #d0533b;
+  --food-aubergine: #6e3b55;
+  --food-honey: #d39a3a;
+  --food-ceramic: #f1eee3;
+  --food-herb: #5f7a35;
+  --food-oil: #d9b84a;
+  --food-bread: #e2b679;
+  --food-cream: #fbf8ef;
+  --food-dark: #2d2a24;
+  --food-fish: #b9c4c9;
+  --food-wood: #9b7048;
+  --food-line: rgba(23, 52, 71, .28);
+
+  /* Courtyard and olive branch */
+  --wall: #fbfaf5;
+  --wall-shade: #e3e8e4;
+  --wall-cap: #164d91;
+  --ground: #e9e3d4;
+  --chair: #3f5f86;
+  --chair-weave: #e2c98f;
+  --orb: #f3d466;
+  --leaf: #6f7f44;
+  --leaf-2: #93a463;
+  --branch: #7a6447;
+  --olive-fruit: #3f4a2b;
+
+  /* Google Maps embed: untouched in light mode */
+  --map-filter: none;
+
+  --measure: 38rem;
+  --page: 78rem;
+  --gutter: clamp(1rem, 4vw, 2.75rem);
+  --space-section: clamp(3.5rem, 7vw, 6.5rem);
+  --header-h: 4rem;
+
+  /* --------------------------------------------------------------
+     Jamstacks component fallbacks (inherited by hosted components).
+     Published portal themes may override these on the host element.
+     Never style the component's shadow-root internals directly.
+     -------------------------------------------------------------- */
+  --jamstacks-font-family: var(--font-sans);
+  --jamstacks-font-size: 16px;
+  --jamstacks-color-primary: var(--accent);
+  --jamstacks-color-background: var(--surface);
+  --jamstacks-color-text: var(--text);
+  --jamstacks-color-muted: var(--muted);
+  --jamstacks-color-border: var(--rule);
+  --jamstacks-color-danger: var(--danger);
+  --jamstacks-color-success: var(--success);
+  --jamstacks-border-radius: var(--radius-ui);
+  --jamstacks-control-height: 48px;
+  --jamstacks-spacing: 14px;
+  /* Component extension supported by the current support-form runtime: fill the page column. */
+  --jamstacks-form-max-width: 100%;
+
+  /* Shared theme toggle (jamstacks package) */
+  --jamstacks-toggle-color: var(--text);
+  --jamstacks-toggle-dark-color: var(--text);
+  --jamstacks-toggle-border: var(--rule);
+  --jamstacks-toggle-background: var(--surface);
+  --jamstacks-toggle-dark-background: var(--surface);
+
+  color-scheme: light;
+}
+
+/* Explicit choices override the device; the media fallback also works without JavaScript.
+   Keep these two blocks identical. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    --bg: #101e2b;
+    --surface: #192e3e;
+    --surface-alt: #203b4a;
+    --text: #f5f1e7;
+    --muted: #bac8cd;
+    --accent: #285ca0;
+    --accent-strong: #3a6fb5;
+    --accent-text: #ffffff;
+    --link: #a9cfff;
+    --olive: #b3c49a;
+    --lemon: #e8cd75;
+    --rule: #436071;
+    --focus: #a9cfff;
+    --danger: #ffaca3;
+    --success: #b3c49a;
+    --open: #9fd39a;
+    --plaster-line: rgba(169, 207, 255, .035);
+    --plaster-wash: rgba(16, 30, 43, 0);
+
+    --table-top: #1d3547;
+    --table-edge: #3a6fb5;
+    --table-shadow: rgba(0, 0, 0, .35);
+    --runner: #233f52;
+    --runner-line: #4f7392;
+    --plate: #dfe6e8;
+    --plate-rim: #3a6fb5;
+    --plate-shadow: rgba(0, 0, 0, .4);
+    --bowl: #3a6fb5;
+    --napkin: #2b4a5e;
+    --glass-fill: rgba(169, 207, 255, .18);
+    --glass-rim: #6f8fa6;
+
+    --food-olive: #8a9a5c;
+    --food-lemon: #e4c560;
+    --food-tomato: #c4574a;
+    --food-aubergine: #8a5470;
+    --food-honey: #c99a4e;
+    --food-ceramic: #eceade;
+    --food-herb: #6d8742;
+    --food-oil: #cdb25a;
+    --food-bread: #cfa673;
+    --food-cream: #f0ede2;
+    --food-dark: #241f1c;
+    --food-fish: #a8b6bd;
+    --food-wood: #8a6646;
+    --food-line: rgba(16, 30, 43, .35);
+
+    --wall: #2a4658;
+    --wall-shade: #213a4a;
+    --wall-cap: #3a6fb5;
+    --ground: #172b3a;
+    --chair: #8fb3dc;
+    --chair-weave: #b59d6a;
+    --orb: #efe6c4;
+    --leaf: #8fa266;
+    --leaf-2: #b3c49a;
+    --branch: #8d7a5e;
+    --olive-fruit: #1b2418;
+
+    --map-filter: invert(.9) hue-rotate(185deg) saturate(.7) brightness(.9) contrast(.9);
+
+    /* The hosted form draws white button text, so its primary stays the deep cobalt. */
+    --jamstacks-color-primary: #285ca0;
+  }
+}
+
+:root.dark {
+  color-scheme: dark;
+  --bg: #101e2b;
+  --surface: #192e3e;
+  --surface-alt: #203b4a;
+  --text: #f5f1e7;
+  --muted: #bac8cd;
+  --accent: #285ca0;
+  --accent-strong: #3a6fb5;
+  --accent-text: #ffffff;
+  --link: #a9cfff;
+  --olive: #b3c49a;
+  --lemon: #e8cd75;
+  --rule: #436071;
+  --focus: #a9cfff;
+  --danger: #ffaca3;
+  --success: #b3c49a;
+  --open: #9fd39a;
+  --plaster-line: rgba(169, 207, 255, .035);
+  --plaster-wash: rgba(16, 30, 43, 0);
+
+  --table-top: #1d3547;
+  --table-edge: #3a6fb5;
+  --table-shadow: rgba(0, 0, 0, .35);
+  --runner: #233f52;
+  --runner-line: #4f7392;
+  --plate: #dfe6e8;
+  --plate-rim: #3a6fb5;
+  --plate-shadow: rgba(0, 0, 0, .4);
+  --bowl: #3a6fb5;
+  --napkin: #2b4a5e;
+  --glass-fill: rgba(169, 207, 255, .18);
+  --glass-rim: #6f8fa6;
+
+  --food-olive: #8a9a5c;
+  --food-lemon: #e4c560;
+  --food-tomato: #c4574a;
+  --food-aubergine: #8a5470;
+  --food-honey: #c99a4e;
+  --food-ceramic: #eceade;
+  --food-herb: #6d8742;
+  --food-oil: #cdb25a;
+  --food-bread: #cfa673;
+  --food-cream: #f0ede2;
+  --food-dark: #241f1c;
+  --food-fish: #a8b6bd;
+  --food-wood: #8a6646;
+  --food-line: rgba(16, 30, 43, .35);
+
+  --wall: #2a4658;
+  --wall-shade: #213a4a;
+  --wall-cap: #3a6fb5;
+  --ground: #172b3a;
+  --chair: #8fb3dc;
+  --chair-weave: #b59d6a;
+  --orb: #efe6c4;
+  --leaf: #8fa266;
+  --leaf-2: #b3c49a;
+  --branch: #8d7a5e;
+  --olive-fruit: #1b2418;
+
+  --map-filter: invert(.9) hue-rotate(185deg) saturate(.7) brightness(.9) contrast(.9);
+
+  /* The hosted form draws white button text, so its primary stays the deep cobalt. */
+  --jamstacks-color-primary: #285ca0;
+}
+
+/* ------------------------------------------------------------------
+   2. Tailwind theme. Only this template's palette exists: Tailwind's default colours
+   are switched off so new UI can't drift into a generic look.
+   ------------------------------------------------------------------ */
+@theme {
+  --color-*: initial;
+  --breakpoint-xs: 24.5rem;
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+}
+
+@theme static {
+  --font-display: "Gelasio", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Commissioner Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius-ui: 4px;
+  --radius-soft: 10px;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-on-accent: var(--accent-text);
+  --color-link: var(--link);
+  --color-olive: var(--olive);
+  --color-lemon: var(--lemon);
+  --color-rule: var(--rule);
+  --color-table: var(--table-top);
+}
+
+/* Layout helpers used across pages. */
+@utility wrap {
+  width: min(100% - 2 * var(--gutter), var(--page));
+  margin-inline: auto;
+}
+@utility section-y {
+  padding-block: var(--space-section);
+}
+@utility figures {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ------------------------------------------------------------------
+   3. Base elements
+   ------------------------------------------------------------------ */
+@layer base {
+  html { background: var(--bg); scroll-padding-top: calc(var(--header-h) + 1rem); scroll-behavior: smooth; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* Brushed plaster: a few sparse, fixed strokes over whitewash. */
+    background:
+      linear-gradient(180deg, var(--plaster-wash), transparent 40rem),
+      repeating-linear-gradient(177deg, transparent 0 46px, var(--plaster-line) 46px 47px, transparent 47px 113px),
+      repeating-linear-gradient(4deg, transparent 0 71px, var(--plaster-line) 71px 72px, transparent 72px 157px),
+      var(--bg);
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  main { flex: 1; outline: none; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.12; letter-spacing: -.01em; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  abbr[title] { text-decoration: none; cursor: help; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+  ::selection { background: var(--accent); color: var(--accent-text); }
+  @media (width < 40rem) {
+    :root { --header-h: 3.5rem; }
+    body { font-size: 1rem; }
+  }
+}
+
+/* ------------------------------------------------------------------
+   4. Shared building blocks. Reuse these instead of restyling each instance.
+   ------------------------------------------------------------------ */
+@layer components {
+  .button {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    min-height: 2.875rem; padding: .6rem 1.25rem;
+    border: 2px solid var(--accent); border-radius: var(--radius-ui);
+    background: var(--accent); color: var(--accent-text);
+    font: inherit; font-weight: 650; letter-spacing: .01em; text-decoration: none; cursor: pointer;
+    transition: background-color .2s ease, border-color .2s ease;
+  }
+  .button:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+  .button-ghost { background: transparent; color: var(--link); border-color: var(--rule); }
+  .button-ghost:hover { background: var(--surface); border-color: var(--link); }
+  .button-quiet { min-height: 2.5rem; padding: .35rem .9rem; background: transparent; color: var(--link); border-color: var(--rule); border-width: 1.5px; font-size: .95rem; }
+  .button-quiet:hover { background: var(--surface); border-color: var(--link); }
+
+  /* Underline that grows in on hover; the short motion stops for reduced-motion visitors. */
+  .text-link {
+    color: var(--link); font-weight: 600;
+    text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .22em;
+    text-decoration-color: color-mix(in srgb, var(--link) 55%, transparent);
+    transition: text-decoration-thickness .2s ease, text-decoration-color .2s ease;
+  }
+  .text-link:hover { text-decoration-thickness: 3px; text-decoration-color: var(--link); }
+
+  /* Small capitals label above headings. */
+  .kicker {
+    display: inline-flex; align-items: center; gap: .6rem;
+    font-size: .78rem; font-weight: 650; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--olive);
+  }
+
+  /* Cobalt ceramic rule: a thick glaze line with a fine second line, as on a painted plate. */
+  .ceramic-rule { border: 0; height: 7px; background: linear-gradient(var(--accent) 0 3px, transparent 3px 5px, var(--accent) 5px 6px, transparent 6px); }
+
+  .section-title { font-size: clamp(1.9rem, 3.6vw, 2.75rem); }
+
+  .tag-diet {
+    display: inline-block; min-width: 1.6rem; padding: 0 .3rem;
+    border: 1px solid var(--rule); border-radius: 3px;
+    font-size: .72rem; font-weight: 650; letter-spacing: .04em; line-height: 1.35rem; text-align: center;
+    color: var(--muted);
+  }
+}
+
+/* ------------------------------------------------------------------
+   5. Illustrations and animation (SVG art is coloured by the tokens above)
+   ------------------------------------------------------------------ */
+@layer components {
+  /* The shared table */
+  .table-art { display: block; width: 100%; height: auto; overflow: visible; }
+  .t-shadow { fill: var(--table-shadow); }
+  .t-top { fill: var(--table-top); stroke: var(--table-edge); }
+  .t-inner { fill: none; stroke: var(--table-edge); opacity: .35; }
+  .t-runner { fill: var(--runner); }
+  .t-runner-line { stroke: var(--runner-line); }
+  .t-napkin { fill: var(--napkin); }
+  .t-cutlery { stroke: var(--glass-rim); }
+  .t-glass { fill: var(--glass-fill); stroke: var(--glass-rim); }
+  .t-bowl { fill: var(--bowl); }
+  .t-bowl-inner { fill: var(--plate); }
+  .plate-shadow { fill: var(--plate-shadow); }
+  .plate-body { fill: var(--plate); stroke: var(--plate-rim); }
+  .plate-ring { fill: none; stroke: var(--plate-rim); }
+  .plate-number { fill: var(--plate-rim); font-family: var(--font-sans); font-weight: 700; }
+  @media (width >= 64rem) { .plate-number-group { display: none; } }
+  .plate[data-available="false"] .food { opacity: .18; filter: grayscale(1); }
+
+  /* Food silhouettes. --food is set from the item's colour token. */
+  .food[data-color="olive"] { --food: var(--food-olive); }
+  .food[data-color="lemon"] { --food: var(--food-lemon); }
+  .food[data-color="tomato"] { --food: var(--food-tomato); }
+  .food[data-color="aubergine"] { --food: var(--food-aubergine); }
+  .food[data-color="honey"] { --food: var(--food-honey); }
+  .food[data-color="ceramic"] { --food: var(--food-ceramic); }
+  .f-main { fill: var(--food); }
+  .f-deep { fill: color-mix(in srgb, var(--food) 72%, var(--food-dark)); }
+  .f-light { fill: color-mix(in srgb, var(--food) 55%, var(--food-cream)); }
+  .f-stroke { fill: none; stroke: color-mix(in srgb, var(--food) 70%, var(--food-dark)); }
+  .f-herb { fill: var(--food-herb); }
+  .f-oil { fill: var(--food-oil); }
+  .f-bread { fill: var(--food-bread); }
+  .f-cream { fill: var(--food-cream); }
+  .f-dark { fill: var(--food-dark); }
+  .f-fish { fill: var(--food-fish); }
+  .f-lemon { fill: var(--food-lemon); }
+  .f-olive { fill: var(--olive-fruit); }
+  .f-wood { stroke: var(--food-wood); }
+  .f-line { fill: none; stroke: var(--food-line); }
+
+  /* Courtyard (terrace) */
+  .c-wall { fill: var(--wall); }
+  .c-wall-shade { fill: var(--wall-shade); }
+  .c-cap { fill: var(--wall-cap); }
+  .c-ground { fill: var(--ground); }
+  .c-chair { fill: none; stroke: var(--chair); }
+  .c-weave { fill: var(--chair-weave); }
+  .c-orb { fill: var(--orb); }
+  .c-table { fill: var(--plate); stroke: var(--chair); }
+  .leaf { fill: var(--leaf); }
+  .leaf-2 { fill: var(--leaf-2); }
+  .branch { fill: none; stroke: var(--branch); }
+  .olive-fruit { fill: var(--olive-fruit); }
+
+  /* A very slow olive-leaf sway; stops under reduced motion. */
+  .sway { transform-box: fill-box; transform-origin: 0% 0%; animation: sway 9s ease-in-out infinite alternate; }
+  .sway-late { animation-delay: -4.5s; }
+  @keyframes sway { from { transform: rotate(-1.6deg); } to { transform: rotate(1.8deg); } }
+
+  /* Section heading glyphs and icons */
+  .glyph { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .glyph-fill { fill: var(--accent); stroke: none; }
+  [data-theme-icon] { color: var(--link); }
+
+  /* One ceramic brushstroke divider. */
+  .brushstroke { display: block; width: min(14rem, 60%); height: auto; fill: var(--accent); opacity: .9; }
+
+  /* Google Maps embed; --map-filter turns it into a night map in dark mode. */
+  .map { position: relative; overflow: hidden; min-height: 20rem; border-top: 3px solid var(--accent); background: var(--surface-alt); }
+  .map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: var(--map-filter); }
+}
+
+/* ------------------------------------------------------------------
+   6. Stateful pieces styled by attributes the components set
+   ------------------------------------------------------------------ */
+@layer components {
+  /* Opening status: neutral until the browser fills in the live state. */
+  .status-dot { width: .55rem; height: .55rem; flex: none; border-radius: 50%; border: 1.5px solid var(--muted); }
+  [data-open="true"] .status-dot { background: var(--open); border-color: var(--open); }
+  [data-open="false"] .status-dot { background: transparent; border-color: var(--accent); }
+
+  /* Printed menu rows */
+  .menu-row:target { background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 85%); }
+  .menu-row:target .menu-row__name { color: var(--link); }
+  .leader { flex: 1; min-width: 1rem; border-bottom: 1.5px dotted var(--rule); transform: translateY(-.3rem); }
+
+  /* Diet filters: rows that don't match the active filters are hidden. Without JavaScript none are. */
+  #menu-sheet[data-filters~="vegetarian"] .menu-row:not([data-match~="vegetarian"]),
+  #menu-sheet[data-filters~="vegan"] .menu-row:not([data-match~="vegan"]),
+  #menu-sheet[data-filters~="gluten-free-ingredients"] .menu-row:not([data-match~="gluten-free-ingredients"]),
+  #menu-sheet[data-filters~="dairy-free-ingredients"] .menu-row:not([data-match~="dairy-free-ingredients"]),
+  #menu-sheet[data-filters~="no-nuts-in-recipe"] .menu-row:not([data-match~="no-nuts-in-recipe"]) { display: none; }
+  @media (scripting: none) { .menu-filters { display: none; } }
+  .section-empty { display: none; }
+  .menu-section[data-empty="true"] .section-empty { display: block; }
+
+  .filter-toggle {
+    display: inline-flex; align-items: center; gap: .4rem; min-height: 2.5rem; padding: .3rem .8rem;
+    border: 1.5px solid var(--rule); border-radius: var(--radius-ui); background: transparent; color: var(--text);
+    font: inherit; font-size: .92rem; font-weight: 550; cursor: pointer; transition: border-color .2s ease;
+  }
+  .filter-toggle:hover { border-color: var(--link); }
+  .filter-toggle[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+  .filter-toggle[aria-pressed="true"]::before { content: "✓"; }
+
+  .faq summary { list-style: none; cursor: pointer; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; flex: none; width: 1.5rem; text-align: center; color: var(--link); font-size: 1.4rem; line-height: 1; transition: transform .2s ease; }
+  .faq[open] summary::after { transform: rotate(45deg); }
+
+  /* Hosted Jamstacks form host (components/jamstacks-support-form.tsx). */
+  .enquiry { position: relative; padding: clamp(1rem, 3vw, 2rem); border-top: 3px solid var(--accent); background: var(--surface); }
+  .enquiry__host { display: block; }
+  .enquiry[data-state="loading"], .enquiry[data-state="loaded"] { min-height: 34rem; }
+  .enquiry__status { padding: 1.25rem 0 0; color: var(--muted); font-size: .9875rem; }
+  .enquiry__status:empty { display: none; }
+  .enquiry[data-state="error"] .enquiry__status,
+  .enquiry[data-state="slow"] .enquiry__status { padding: 1rem 1.25rem; border-left: 3px solid var(--accent); background: var(--surface-alt); color: var(--text); }
+  @media (width < 40rem) { .enquiry[data-state="loading"], .enquiry[data-state="loaded"] { min-height: 30rem; } }
+
+  .copy-status:empty { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+
+@media print {
+  html, body { background: #fff !important; color: #000; }
+  .site-header { position: static; }
+  .print-hide, .map, .table-art, .courtyard-art, .brushstroke, svg[aria-hidden="true"] { display: none !important; }
+  .menu-row { break-inside: avoid; }
+  .menu-row[data-match] { display: flex !important; }
+  a { color: #000; }
+}

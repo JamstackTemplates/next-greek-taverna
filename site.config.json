@@ -1,0 +1,10 @@
+{
+  "name": "Blue Quince",
+  "description": "A neighbourhood Greek taverna for shared meze, the grill and a summer courtyard. Menu, opening hours, how to find us and table enquiries.",
+  "domain": "next-greek-taverna.jamstacks.net",
+  "timeZone": "America/New_York",
+  "jamstacks": {
+    "siteId": "",
+    "cdnUrl": "https://cdn.jamstacks.net"
+  }
+}

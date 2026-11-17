@@ -1,0 +1,19 @@
+{
+  "name": "Greek taverna",
+  "description": "A whitewash-and-Aegean-blue Greek taverna theme with editable meze, grill and drinks menus, a shared-table illustration, seasonal terrace details, opening hours, location and a Jamstacks contact component for reservation and celebration enquiries.",
+  "tech": "next",
+  "type": "greek",
+  "style": "taverna",
+  "internal": false,
+  "components": [
+    "support-form"
+  ],
+  "configFile": "site.config.json",
+  "screenshots": {
+    "light": "jamstacks/home-light.jpg",
+    "dark": "jamstacks/home-dark.jpg",
+    "theme": {
+      "strategy": "media"
+    }
+  }
+}
